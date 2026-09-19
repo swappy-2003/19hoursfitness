@@ -11,9 +11,9 @@ export default function Preloader() {
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
-    // Immediately bypass on mobile / touch or reduced motion
+    // Immediately bypass on mobile (<= 800px) / touch or reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.innerWidth < 768 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isMobile = window.innerWidth <= 800 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
     if (prefersReducedMotion || isMobile) {
       setComplete(true);

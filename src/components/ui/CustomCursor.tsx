@@ -12,9 +12,10 @@ export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Disable on touch / mobile devices
+    // Disable on touch / mobile devices or small screens
     const isTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    if (isTouch) return;
+    const isSmallScreen = window.innerWidth <= 800;
+    if (isTouch || isSmallScreen) return;
 
     document.body.classList.add("has-custom-cursor");
 

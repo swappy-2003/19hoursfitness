@@ -29,7 +29,7 @@ export default function FloatingActions() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
+    <div className="floating-actions fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
       {/* Back to Top Button */}
       <div
         className={`pointer-events-auto transition-all duration-500 ease-out ${

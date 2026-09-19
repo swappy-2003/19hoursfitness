@@ -107,16 +107,18 @@ body {
 }
 
 /* ============================================================
-   Mobile Video Hero & Intro Styles (<= 800px)
+   Mobile Video Hero Styles (<= 800px)
    ============================================================ */
 .hero-media__mobile-video {
   display: none;
 }
-.hero-mobile-intro-overlay {
-  display: none;
-}
 
 @media (max-width: 800px) {
+  /* Disable preloader on mobile so content displays immediately */
+  aside[aria-label="Loading page"] {
+    display: none !important;
+  }
+
   /* Show video as full-bleed background */
   .hero-media__mobile-video {
     display: block;
@@ -128,97 +130,5 @@ body {
     object-position: center;
     z-index: 1;
   }
-
-  /* Fullscreen tap listener for intro */
-  .hero-mobile-intro-overlay {
-    display: flex;
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    cursor: pointer;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: calc(env(safe-area-inset-top, 24px) + 24px) 20px calc(env(safe-area-inset-bottom, 24px) + 32px);
-    background: transparent;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-
-  /* Sound Toggle Pill Button */
-  .hero-mobile-sound-btn {
-    align-self: flex-end;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 14px;
-    background: rgba(10, 10, 10, 0.65);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 999px;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  }
-
-  /* Pulsing Skip Hint */
-  .hero-mobile-skip-hint {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 20px;
-    background: rgba(10, 10, 10, 0.65);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 999px;
-    color: rgba(255, 255, 255, 0.92);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    animation: pulseSkipHint 2.2s infinite ease-in-out;
-    pointer-events: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  }
-
-  @keyframes pulseSkipHint {
-    0%, 100% { opacity: 0.78; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(-4px); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7); }
-  }
-
-  /* Intro Active: Freeze scrolling and hide UI chrome */
-  body.mobile-intro-active {
-    overflow: hidden !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    touch-action: none;
-  }
-
-  body.mobile-intro-active header,
-  body.mobile-intro-active nav,
-  body.mobile-intro-active .hero-content,
-  body.mobile-intro-active .hero-bottom,
-  body.mobile-intro-active main > *:not(#hero),
-  body.mobile-intro-active footer,
-  body.mobile-intro-active .floating-actions {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-
-  /* Smooth fade-in when intro finishes */
-  header,
-  nav,
-  .hero-content,
-  .hero-bottom,
-  main > *:not(#hero),
-  footer,
-  .floating-actions {
-    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.75s ease;
-  }
 }
+
