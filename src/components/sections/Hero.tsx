@@ -201,7 +201,7 @@ export default function Hero() {
         {/* Mobile Video (with realHero.png poster fallback) */}
         <video
           ref={videoRef}
-          src="/images/Video-14356.mp4"
+          src="/images/hero-faststart.mp4"
           poster="/images/realHero.png"
           autoPlay
           muted={isMuted}
