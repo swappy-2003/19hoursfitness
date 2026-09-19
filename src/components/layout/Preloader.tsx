@@ -11,9 +11,11 @@ export default function Preloader() {
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
-    // Check prefers-reduced-motion
+    // Immediately bypass on mobile / touch or reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
+    const isMobile = window.innerWidth < 768 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
+    if (prefersReducedMotion || isMobile) {
       setComplete(true);
       return;
     }
@@ -21,20 +23,29 @@ export default function Preloader() {
     const container = containerRef.current;
     const text = textRef.current;
     const percentEl = percentRef.current;
-    if (!container || !text || !percentEl) return;
+    if (!container || !text || !percentEl) {
+      setComplete(true);
+      return;
+    }
+
+    // Safety timeout: Always unlock page after 1s max
+    const safetyTimer = setTimeout(() => {
+      setComplete(true);
+    }, 1100);
 
     const progressObj = { value: 0 };
 
     const tl = gsap.timeline({
       onComplete: () => {
         setComplete(true);
+        clearTimeout(safetyTimer);
       },
     });
 
-    // Fast ~1s total sequence
+    // Fast ~0.8s sequence on desktop
     tl.to(progressObj, {
       value: 100,
-      duration: 0.8,
+      duration: 0.65,
       ease: "power2.inOut",
       onUpdate: () => {
         if (percentEl) {
@@ -47,7 +58,7 @@ export default function Preloader() {
         {
           yPercent: -100,
           opacity: 0,
-          duration: 0.4,
+          duration: 0.3,
           ease: "power3.in",
         },
         "+=0.05"
@@ -56,13 +67,14 @@ export default function Preloader() {
         container,
         {
           yPercent: -100,
-          duration: 0.6,
+          duration: 0.45,
           ease: "expo.inOut",
         },
         "-=0.1"
       );
 
     return () => {
+      clearTimeout(safetyTimer);
       tl.kill();
     };
   }, []);

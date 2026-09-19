@@ -126,10 +126,25 @@ export default function Footer() {
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-full object-cover transition-opacity duration-500 opacity-85 group-hover:opacity-100"
+                className="w-full h-full object-cover transition-opacity duration-500 opacity-85 group-hover:opacity-100 pointer-events-none md:pointer-events-auto"
               />
+
+              {/* Mobile Tap-to-Navigate Overlay (Prevents scroll trapping on touch devices) */}
+              <a
+                href={BRAND.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute inset-0 z-10 md:hidden flex items-end justify-end p-3"
+                aria-label="Open 19 Hours Fitness in Google Maps"
+              >
+                <span className="px-3 py-1.5 bg-[#00E5FF] text-[#08090B] font-mono text-[10px] font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
+                  <span>Open Maps</span>
+                  <ArrowUpRight className="w-3 h-3" />
+                </span>
+              </a>
+
               {/* Location Pin Tag */}
-              <div className="absolute bottom-3 left-3 bg-[#08090B]/90 backdrop-blur-md px-3 py-1.5 border border-white/10 flex items-center gap-2 pointer-events-none">
+              <div className="absolute bottom-3 left-3 bg-[#08090B]/90 backdrop-blur-md px-3 py-1.5 border border-white/10 flex items-center gap-2 pointer-events-none z-10">
                 <span className="w-2 h-2 rounded-full bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]" />
                 <span className="font-mono text-[10px] text-[#F5F5F5] uppercase tracking-wider font-medium">
                   19 HOURS · VIRAR WEST

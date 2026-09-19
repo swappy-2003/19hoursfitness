@@ -51,7 +51,7 @@ export default function Experience() {
       className="relative z-20 w-full bg-[#08090B] border-t border-white/[0.06]"
     >
       {/* Pinned Desktop Container / Fallback Mobile Container */}
-      <div ref={triggerRef} className="relative w-full lg:h-screen overflow-hidden flex flex-col justify-between py-24 lg:py-0">
+      <div ref={triggerRef} className="relative w-full lg:h-screen overflow-visible lg:overflow-hidden flex flex-col justify-between py-24 lg:py-0">
         {/* Top Header Row on Desktop */}
         <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:pt-16 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
@@ -66,7 +66,7 @@ export default function Experience() {
         </div>
 
         {/* Horizontal Track (Desktop: transforms X on scroll; Mobile: vertical stack) */}
-        <div className="relative w-full lg:flex-1 lg:flex lg:items-center overflow-hidden">
+        <div className="relative w-full lg:flex-1 lg:flex lg:items-center overflow-visible lg:overflow-hidden">
           <div
             ref={trackRef}
             className="flex flex-col lg:flex-row gap-8 lg:gap-12 px-6 md:px-12 lg:px-16 w-full lg:w-max will-change-transform"
