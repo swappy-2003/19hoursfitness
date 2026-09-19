@@ -19,7 +19,7 @@ export default function Hero() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Check mobile & manage intro state
+  // Check mobile & manage intro state with resize listener
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth <= 800;
@@ -44,8 +44,10 @@ export default function Hero() {
     };
 
     checkMobile();
+    window.addEventListener("resize", checkMobile);
 
     return () => {
+      window.removeEventListener("resize", checkMobile);
       document.body.classList.remove("mobile-intro-active");
     };
   }, []);
@@ -55,13 +57,13 @@ export default function Hero() {
     document.body.classList.remove("mobile-intro-active");
     try {
       sessionStorage.setItem("hero_intro_seen", "true");
-    } catch {}
+    } catch { }
 
     // Switch video to muted ambient loop in the background
     if (videoRef.current) {
       videoRef.current.muted = true;
       setIsMuted(true);
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     }
   };
 
@@ -74,19 +76,29 @@ export default function Hero() {
     }
   };
 
-  // Autoplay handler with fallback
+  // Autoplay handler on mobile (plays both in intro and ambient loop)
   useEffect(() => {
-    if (isMobile && !isRevealed && videoRef.current) {
+    if (isMobile && videoRef.current) {
       const video = videoRef.current;
       video.muted = true;
-      video.currentTime = 0;
+      video.defaultMuted = true;
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // If the mobile browser policy blocks autoplay, reveal UI immediately
+          // If mobile browser policy blocks autoplay, reveal UI immediately
           handleReveal();
         });
       }
+    }
+  }, [isMobile, isRevealed]);
+
+  // Safety fallback: Never leave user stuck on intro for more than 7 seconds
+  useEffect(() => {
+    if (isMobile && !isRevealed) {
+      const timer = setTimeout(() => {
+        handleReveal();
+      }, 7000);
+      return () => clearTimeout(timer);
     }
   }, [isMobile, isRevealed]);
 
@@ -229,7 +241,7 @@ export default function Hero() {
         {/* Mobile-only video */}
         <video
           ref={videoRef}
-          src="/images/hero-faststart.mp4"
+          src="/images/InShot_20260919_195421076.mp4"
           className="hero-media__mobile-video"
           playsInline
           autoPlay
