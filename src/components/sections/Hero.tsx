@@ -7,6 +7,10 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { BRAND } from "@/lib/constants";
 
 export default function Hero() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
   const heroRef = useRef<HTMLElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
   const textGroupRef = useRef<HTMLDivElement>(null);
@@ -15,25 +19,78 @@ export default function Hero() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [isIntroActive, setIsIntroActive] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-
-  // Guarantee mobile video autoplay & loop
+  // Check mobile & manage intro state
   useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 800;
+      setIsMobile(mobile);
+
+      if (mobile) {
+        // Skip intro if user already saw it this session or arrived via anchor hash (e.g., #contact)
+        const alreadySeen = typeof window !== "undefined" && sessionStorage.getItem("hero_intro_seen") === "true";
+        const hasHash = typeof window !== "undefined" && Boolean(window.location.hash);
+
+        if (alreadySeen || hasHash) {
+          setIsRevealed(true);
+          document.body.classList.remove("mobile-intro-active");
+        } else {
+          setIsRevealed(false);
+          document.body.classList.add("mobile-intro-active");
+        }
+      } else {
+        setIsRevealed(true);
+        document.body.classList.remove("mobile-intro-active");
+      }
+    };
+
+    checkMobile();
+
+    return () => {
+      document.body.classList.remove("mobile-intro-active");
+    };
+  }, []);
+
+  const handleReveal = () => {
+    setIsRevealed(true);
+    document.body.classList.remove("mobile-intro-active");
+    try {
+      sessionStorage.setItem("hero_intro_seen", "true");
+    } catch {}
+
+    // Switch video to muted ambient loop in the background
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      setIsMuted(true);
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const toggleSound = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation(); // Prevents triggering handleReveal
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+    }
+  };
+
+  // Autoplay handler with fallback
+  useEffect(() => {
+    if (isMobile && !isRevealed && videoRef.current) {
+      const video = videoRef.current;
       video.muted = true;
-      video.defaultMuted = true;
+      video.currentTime = 0;
       const playPromise = video.play();
       if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.log("Mobile video autoplay prevented:", err);
+        playPromise.catch(() => {
+          // If the mobile browser policy blocks autoplay, reveal UI immediately
+          handleReveal();
         });
       }
     }
-  }, []);
+  }, [isMobile, isRevealed]);
 
+  // Desktop animations (mouse parallax and scrollTrigger - 100% untouched)
   useEffect(() => {
     const hero = heroRef.current;
     const imageWrapper = imageWrapperRef.current;
@@ -42,18 +99,10 @@ export default function Hero() {
     const eyebrow = eyebrowRef.current;
     if (!hero || !imageWrapper || !textGroup) return;
 
-    const mobileCheck = window.innerWidth < 1024 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const phoneCheck = window.innerWidth < 768;
-    setIsMobile(phoneCheck);
-
-    // On desktop, intro is never active
-    if (!phoneCheck) {
-      setIsIntroActive(false);
-    }
-
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobileDevice = window.innerWidth < 1024 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
-    if (mobileCheck || prefersReducedMotion) {
+    if (isMobileDevice || prefersReducedMotion) {
       gsap.set(imageWrapper, { scale: 1, opacity: 1 });
       gsap.set(eyebrow, { y: 0, opacity: 1 });
       gsap.set(headline?.querySelectorAll(".hero-line") ?? [], { yPercent: 0, opacity: 1 });
@@ -155,34 +204,13 @@ export default function Hero() {
     };
   }, []);
 
-  const handleSkipIntro = () => {
-    setIsIntroActive(false);
-    // Mute video when entering standard website mode
-    const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      setIsMuted(true);
-    }
-  };
-
-  const toggleSound = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
-  };
-
   return (
     <section
       ref={heroRef}
       id="hero"
-      onClick={isMobile && isIntroActive ? handleSkipIntro : undefined}
-      className={`relative w-full h-screen overflow-hidden bg-[#08090B] flex flex-col justify-between px-6 md:px-12 pt-28 pb-12 select-none ${
-        isMobile && isIntroActive ? "cursor-pointer" : ""
-      }`}
+      className="relative w-full h-screen overflow-hidden bg-[#08090B] flex flex-col justify-between px-6 md:px-12 pt-28 pb-12 select-none"
     >
-      {/* Background Media: Desktop Image / Mobile Video (with fallback poster) */}
+      {/* Background Media */}
       <div
         ref={imageWrapperRef}
         className="absolute inset-0 z-0 will-change-transform pointer-events-none"
@@ -198,68 +226,53 @@ export default function Hero() {
           className="hidden md:block object-cover object-center brightness-[0.92] contrast-[1.05]"
         />
 
-        {/* Mobile Video (with realHero.png poster fallback) */}
+        {/* Mobile-only video */}
         <video
           ref={videoRef}
           src="/images/hero-faststart.mp4"
-          poster="/images/realHero.png"
+          className="hero-media__mobile-video"
+          playsInline
           autoPlay
           muted={isMuted}
-          loop
-          playsInline
+          loop={isRevealed}
+          onEnded={handleReveal}
           preload="auto"
-          onEnded={handleSkipIntro}
-          className="block md:hidden w-full h-full object-cover brightness-[0.92] contrast-[1.05]"
         />
 
-        {/* Soft Cinematic Vignette and Smooth Section Blend */}
+        {/* Soft Vignette Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#08090B] via-[#08090B]/25 to-black/20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/60 via-transparent to-[#08090B]/30 pointer-events-none" />
       </div>
 
-      {/* MOBILE VIDEO INTRO OVERLAY (Matches user screenshot: UNMUTE top right + TAP SCREEN TO SKIP bottom) */}
-      {isMobile && isIntroActive && (
-        <div className="absolute inset-0 z-30 flex flex-col justify-between p-6 pointer-events-auto">
-          {/* Top Right: UNMUTE Pill Button */}
-          <div className="flex justify-end pt-4">
-            <button
-              onClick={toggleSound}
-              aria-label={isMuted ? "Unmute video" : "Mute video"}
-              className="inline-flex items-center gap-2 bg-black/60 hover:bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-[#F5F5F5] font-mono text-xs font-semibold tracking-wider uppercase active:scale-95 transition-all shadow-lg"
-            >
-              {isMuted ? (
-                <>
-                  <VolumeX className="w-4 h-4 text-white/80" />
-                  <span>UNMUTE</span>
-                </>
-              ) : (
-                <>
-                  <Volume2 className="w-4 h-4 text-[#00E5FF]" />
-                  <span className="text-[#00E5FF]">MUTE</span>
-                </>
-              )}
-            </button>
-          </div>
+      {/* Mobile Intro Overlay (visible only before user interacts / video ends) */}
+      {isMobile && !isRevealed && (
+        <div
+          className="hero-mobile-intro-overlay"
+          onClick={handleReveal}
+          onTouchEnd={handleReveal}
+          role="button"
+          tabIndex={0}
+          aria-label="Tap screen to enter site"
+        >
+          <button
+            type="button"
+            className="hero-mobile-sound-btn"
+            onClick={toggleSound}
+            onTouchEnd={toggleSound}
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+          >
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+            <span>{isMuted ? "Unmute" : "Sound On"}</span>
+          </button>
 
-          {/* Bottom Center: TAP SCREEN TO SKIP Pill Button */}
-          <div className="flex justify-center pb-8">
-            <button
-              onClick={handleSkipIntro}
-              className="bg-black/60 hover:bg-black/80 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/15 text-white/90 font-mono text-xs font-medium tracking-wider uppercase active:scale-95 transition-all shadow-lg"
-            >
-              TAP SCREEN TO SKIP
-            </button>
+          <div className="hero-mobile-skip-hint">
+            <span>Tap screen to skip</span>
           </div>
         </div>
       )}
 
-      {/* Eyebrow / Location (Hidden during intro, smoothly reveals on skip) */}
-      <div
-        ref={eyebrowRef}
-        className={`relative z-10 pt-4 transition-all duration-700 ${
-          isMobile && isIntroActive ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"
-        }`}
-      >
+      {/* Eyebrow / Location */}
+      <div ref={eyebrowRef} className="hero-content relative z-10 pt-4">
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-3 bg-[#08090B]/75 backdrop-blur-md px-3.5 py-1.5 border border-white/10 shadow-lg">
             <Image
@@ -274,10 +287,11 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Sound Toggle on Mobile after entering normal site */}
-          {isMobile && !isIntroActive && (
+          {/* Sound Toggle on Mobile when revealed */}
+          {isMobile && isRevealed && (
             <button
               onClick={toggleSound}
+              onTouchEnd={toggleSound}
               aria-label={isMuted ? "Unmute video" : "Mute video"}
               className="inline-flex items-center gap-1.5 bg-[#08090B]/80 backdrop-blur-md px-3 py-1.5 border border-white/10 text-[#F5F5F5] font-mono text-[10px] tracking-wider uppercase active:scale-95 transition-all"
             >
@@ -297,13 +311,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Main Massive Editorial Typography (Hidden during intro, smoothly reveals on skip) */}
-      <div
-        ref={textGroupRef}
-        className={`relative z-10 my-auto will-change-transform transition-all duration-700 ${
-          isMobile && isIntroActive ? "opacity-0 translate-y-6 pointer-events-none" : "opacity-100 translate-y-0"
-        }`}
-      >
+      {/* Main Massive Editorial Typography */}
+      <div ref={textGroupRef} className="hero-content relative z-10 my-auto will-change-transform">
         <h1
           ref={headlineRef}
           className="font-display font-black tracking-tight text-huge leading-[0.85] text-[#F5F5F5] uppercase drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
@@ -323,12 +332,10 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* Bottom Bar & Scroll Indicator (Hidden during intro, reveals on skip) */}
+      {/* Bottom Bar & Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
-        className={`relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3] transition-all duration-700 ${
-          isMobile && isIntroActive ? "opacity-0 pointer-events-none" : "opacity-100"
-        }`}
+        className="hero-bottom relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3]"
       >
         <div className="hidden sm:block uppercase">
           STRENGTH · CROSSFIT · RECOVERY
