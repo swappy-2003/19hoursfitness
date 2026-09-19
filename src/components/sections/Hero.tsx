@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { BRAND } from "@/lib/constants";
+
+const SESSION_KEY = "19hours_hero_entered";
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
@@ -13,6 +15,11 @@ export default function Hero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const [isMobile, setIsMobile] = useState(false);
+  const [hasEntered, setHasEntered] = useState(true); // Default true for SSR & desktop
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -22,10 +29,25 @@ export default function Hero() {
     const eyebrow = eyebrowRef.current;
     if (!hero || !imageWrapper || !textGroup) return;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const isMobile = window.innerWidth < 1024 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const mobileCheck = window.innerWidth < 1024 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const phoneCheck = window.innerWidth < 768;
+    setIsMobile(phoneCheck);
 
-    if (isMobile || prefersReducedMotion) {
+    // Mobile First-Time Visit Session Check
+    if (phoneCheck) {
+      try {
+        const entered = sessionStorage.getItem(SESSION_KEY);
+        if (!entered) {
+          setHasEntered(false);
+        }
+      } catch {
+        // In case sessionStorage is restricted
+      }
+    }
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (mobileCheck || prefersReducedMotion) {
       gsap.set(imageWrapper, { scale: 1, opacity: 1 });
       gsap.set(eyebrow, { y: 0, opacity: 1 });
       gsap.set(headline?.querySelectorAll(".hero-line") ?? [], { yPercent: 0, opacity: 1 });
@@ -127,17 +149,38 @@ export default function Hero() {
     };
   }, []);
 
+  const handleEnter = () => {
+    setHasEntered(true);
+    try {
+      sessionStorage.setItem(SESSION_KEY, "true");
+    } catch {
+      // Ignore sessionStorage errors
+    }
+  };
+
+  const toggleSound = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setIsMuted(video.muted);
+  };
+
   return (
     <section
       ref={heroRef}
       id="hero"
-      className="relative w-full h-screen overflow-hidden bg-[#08090B] flex flex-col justify-between px-6 md:px-12 pt-28 pb-12 select-none"
+      onClick={!hasEntered && isMobile ? handleEnter : undefined}
+      className={`relative w-full h-screen overflow-hidden bg-[#08090B] flex flex-col justify-between px-6 md:px-12 pt-28 pb-12 select-none ${
+        !hasEntered && isMobile ? "cursor-pointer" : ""
+      }`}
     >
-      {/* Background Image Container with Gradient Overlay */}
+      {/* Background Media: Desktop Image / Mobile Video (with fallback poster) */}
       <div
         ref={imageWrapperRef}
         className="absolute inset-0 z-0 will-change-transform pointer-events-none"
       >
+        {/* Desktop Image (Untouched) */}
         <Image
           src="/images/realHero.png"
           alt="19 Hours Fitness Facility in Virar West"
@@ -145,31 +188,134 @@ export default function Hero() {
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-center brightness-[0.92] contrast-[1.05]"
+          className="hidden md:block object-cover object-center brightness-[0.92] contrast-[1.05]"
         />
+
+        {/* Mobile Video (with realHero.png poster fallback) */}
+        <video
+          ref={videoRef}
+          src="/images/experience/Video-14356.mp4"
+          poster="/images/realHero.png"
+          autoPlay
+          muted={isMuted}
+          loop
+          playsInline
+          preload="auto"
+          className="block md:hidden w-full h-full object-cover brightness-[0.9] contrast-[1.05]"
+        />
+
         {/* Soft Cinematic Vignette and Smooth Section Blend */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#08090B] via-[#08090B]/25 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/60 via-transparent to-[#08090B]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#08090B] via-[#08090B]/25 to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/60 via-transparent to-[#08090B]/30 pointer-events-none" />
       </div>
 
+      {/* MOBILE FIRST-TIME VISIT OVERLAY: Prompts user to click anywhere to enter & unmute */}
+      {isMobile && !hasEntered && (
+        <div className="absolute inset-0 z-30 flex flex-col justify-between p-6 bg-black/30 backdrop-blur-[2px] transition-opacity duration-700">
+          {/* Top Bar with Sound Toggle */}
+          <div className="flex items-center justify-between pt-2">
+            <div className="inline-flex items-center gap-2 bg-[#08090B]/85 backdrop-blur-md px-3 py-1.5 border border-white/10">
+              <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
+              <span className="font-mono text-[10px] tracking-widest text-[#F5F5F5] uppercase">
+                LIVE GYM FILM
+              </span>
+            </div>
+
+            <button
+              onClick={toggleSound}
+              aria-label={isMuted ? "Turn on audio" : "Mute audio"}
+              className="inline-flex items-center gap-2 bg-[#08090B]/85 hover:bg-[#08090B] backdrop-blur-md px-3.5 py-1.5 border border-white/10 text-[#F5F5F5] font-mono text-xs uppercase tracking-wider transition-colors active:scale-95"
+            >
+              {isMuted ? (
+                <>
+                  <VolumeX className="w-3.5 h-3.5 text-[#969BA3]" />
+                  <span>TURN ON AUDIO</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-3.5 h-3.5 text-[#00E5FF]" />
+                  <span className="text-[#00E5FF]">AUDIO ON</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Center Call-to-Action */}
+          <div className="my-auto text-center space-y-4 pointer-events-none">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#08090B]/80 border border-[#00E5FF]/40 text-[#00E5FF] shadow-[0_0_30px_rgba(0,229,255,0.25)] animate-bounce">
+              <Sparkles className="w-6 h-6" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h2 className="font-display font-black text-3xl uppercase tracking-wider text-[#F5F5F5] drop-shadow-[0_2px_15px_rgba(0,0,0,0.8)]">
+                19 HOURS FITNESS
+              </h2>
+              <p className="font-mono text-xs tracking-[0.25em] text-[#00E5FF] uppercase font-semibold">
+                TAP ANYWHERE TO ENTER
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom Tap Indicator */}
+          <div className="text-center pb-4 pointer-events-none">
+            <span className="font-mono text-[11px] text-[#969BA3]/90 tracking-widest uppercase bg-[#08090B]/80 px-4 py-1.5 border border-white/10 backdrop-blur-sm">
+              CLICK ANYWHERE TO EXPLORE →
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Eyebrow / Location */}
-      <div ref={eyebrowRef} className="relative z-10 pt-4 opacity-0">
-        <div className="inline-flex items-center gap-3 bg-[#08090B]/75 backdrop-blur-md px-3.5 py-1.5 border border-white/10 shadow-lg">
-          <Image
-            src="/images/logo.png"
-            alt="19 Hours Fitness Logo"
-            width={24}
-            height={24}
-            className="w-6 h-6 object-contain"
-          />
-          <span className="font-mono text-xs md:text-sm tracking-[0.3em] uppercase text-[#F5F5F5]/90 font-medium">
-            {BRAND.eyebrow}
-          </span>
+      <div
+        ref={eyebrowRef}
+        className={`relative z-10 pt-4 transition-all duration-700 ${
+          isMobile && !hasEntered ? "opacity-0 translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-3 bg-[#08090B]/75 backdrop-blur-md px-3.5 py-1.5 border border-white/10 shadow-lg">
+            <Image
+              src="/images/logo.png"
+              alt="19 Hours Fitness Logo"
+              width={24}
+              height={24}
+              className="w-6 h-6 object-contain"
+            />
+            <span className="font-mono text-xs md:text-sm tracking-[0.3em] uppercase text-[#F5F5F5]/90 font-medium">
+              {BRAND.eyebrow}
+            </span>
+          </div>
+
+          {/* Sound Toggle on Mobile after entering */}
+          {isMobile && hasEntered && (
+            <button
+              onClick={toggleSound}
+              aria-label={isMuted ? "Unmute video" : "Mute video"}
+              className="inline-flex items-center gap-1.5 bg-[#08090B]/80 backdrop-blur-md px-3 py-1.5 border border-white/10 text-[#F5F5F5] font-mono text-[10px] tracking-wider uppercase"
+            >
+              {isMuted ? (
+                <>
+                  <VolumeX className="w-3 h-3 text-[#969BA3]" />
+                  <span>UNMUTE</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-3 h-3 text-[#00E5FF]" />
+                  <span className="text-[#00E5FF]">MUTED</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Main Massive Editorial Typography */}
-      <div ref={textGroupRef} className="relative z-10 my-auto will-change-transform">
+      <div
+        ref={textGroupRef}
+        className={`relative z-10 my-auto will-change-transform transition-all duration-700 ${
+          isMobile && !hasEntered ? "opacity-0 translate-y-6 pointer-events-none" : "opacity-100 translate-y-0"
+        }`}
+      >
         <h1
           ref={headlineRef}
           className="font-display font-black tracking-tight text-huge leading-[0.85] text-[#F5F5F5] uppercase drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
@@ -192,7 +338,9 @@ export default function Hero() {
       {/* Bottom Bar & Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3]"
+        className={`relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3] transition-all duration-700 ${
+          isMobile && !hasEntered ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
       >
         <div className="hidden sm:block uppercase">
           STRENGTH · CROSSFIT · RECOVERY
