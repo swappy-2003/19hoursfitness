@@ -19,6 +19,13 @@ export default function VideoIntro() {
   useEffect(() => {
     setMounted(true);
 
+    // Strictly for mobile / phone screens only (< 768px)
+    const isMobile = window.innerWidth < 768 || window.matchMedia("(max-width: 767px)").matches;
+    if (!isMobile) {
+      setShouldPlay(false);
+      return;
+    }
+
     // Check if user has already seen the intro in this browser tab session
     try {
       const hasSeen = sessionStorage.getItem(SESSION_STORAGE_KEY);
@@ -97,21 +104,8 @@ export default function VideoIntro() {
       aria-label="Cinematic Video Intro"
       className="fixed inset-0 z-[10000] w-full h-full bg-[#08090B] flex flex-col justify-between overflow-hidden select-none will-change-transform"
     >
-      {/* Background Video Canvas */}
+      {/* Background Video Canvas (Full-screen Mobile Portrait) */}
       <div className="absolute inset-0 z-0 w-full h-full bg-[#08090B] flex items-center justify-center">
-        {/* Ambient blurred backdrop for desktop widescreen */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none opacity-30 blur-3xl scale-125 hidden lg:block">
-          <video
-            src="/images/experience/Video-14356.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Primary Foreground Video (Vertical 9:16 portrait on mobile; framed on desktop) */}
         <video
           ref={videoRef}
           src="/images/experience/Video-14356.mp4"
@@ -122,7 +116,7 @@ export default function VideoIntro() {
           onTimeUpdate={handleTimeUpdate}
           onEnded={finishIntro}
           onError={finishIntro}
-          className="relative z-10 w-full h-full max-h-screen object-cover lg:object-contain lg:max-w-[480px] xl:max-w-[540px] shadow-2xl"
+          className="relative z-10 w-full h-full object-cover"
         />
 
         {/* Soft Vignette Overlay */}
