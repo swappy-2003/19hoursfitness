@@ -9,7 +9,7 @@ export default function Trainers() {
   return (
     <section
       id="trainers"
-      className="relative z-20 w-full min-h-screen bg-[#08090B] py-32 px-6 md:px-12 border-t border-white/[0.06] flex flex-col justify-center"
+      className="relative z-20 w-full lg:min-h-screen bg-[#08090B] py-16 sm:py-20 md:py-28 lg:py-32 px-6 md:px-12 border-t border-white/[0.06] flex flex-col justify-center"
     >
       <div className="max-w-[1440px] mx-auto w-full">
         {/* Header */}

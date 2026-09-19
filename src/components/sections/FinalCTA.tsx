@@ -8,7 +8,7 @@ import { BRAND } from "@/lib/constants";
 
 export default function FinalCTA() {
   return (
-    <section className="relative z-20 w-full min-h-screen bg-[#08090B] flex items-center justify-center px-6 md:px-12 py-32 border-t border-white/[0.06] overflow-hidden select-none">
+    <section className="relative z-20 w-full lg:min-h-screen bg-[#08090B] flex items-center justify-center px-6 md:px-12 py-20 sm:py-24 md:py-32 border-t border-white/[0.06] overflow-hidden select-none">
       {/* Background Atmosphere Image */}
       <div className="absolute inset-0 z-0">
         <Image

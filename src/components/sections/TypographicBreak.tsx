@@ -56,7 +56,7 @@ export default function TypographicBreak() {
   return (
     <section
       ref={containerRef}
-      className="relative z-20 w-full min-h-[70vh] md:min-h-[85vh] bg-[#08090B] flex flex-col justify-center items-center px-6 md:px-12 py-24 border-t border-white/[0.06] select-none"
+      className="relative z-20 w-full min-h-[45vh] md:min-h-[80vh] bg-[#08090B] flex flex-col justify-center items-center px-6 md:px-12 py-16 sm:py-20 md:py-24 border-t border-white/[0.06] select-none"
     >
       <div className="max-w-5xl text-center space-y-4">
         <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#00E5FF] block mb-4">

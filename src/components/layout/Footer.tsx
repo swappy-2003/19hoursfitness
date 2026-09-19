@@ -36,65 +36,68 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Navigation */}
-          <div className="w-full md:col-span-3 lg:col-span-2 space-y-4">
-            <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
-              NAVIGATION
-            </span>
-            <ul className="space-y-2.5 text-xs tracking-wider uppercase font-medium">
-              {NAV_LINKS.map((link) => (
-                <li key={link.name}>
+          {/* Navigation and Connect: 2-column on mobile, direct grid children on desktop */}
+          <div className="w-full grid grid-cols-2 gap-8 md:contents">
+            {/* Quick Navigation */}
+            <div className="space-y-4 md:col-span-3 lg:col-span-2">
+              <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
+                NAVIGATION
+              </span>
+              <ul className="space-y-2.5 text-xs tracking-wider uppercase font-medium">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className="hover:text-[#00E5FF] transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact & Socials */}
+            <div className="space-y-4 md:col-span-3 lg:col-span-2">
+              <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
+                CONNECT
+              </span>
+              <ul className="space-y-3 text-xs tracking-wider uppercase">
+                <li>
                   <a
-                    href={link.href}
-                    className="hover:text-[#00E5FF] transition-colors"
+                    href={BRAND.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-[#00E5FF] transition-colors group"
                   >
-                    {link.name}
+                    <span>WhatsApp Direct</span>
+                    <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact & Socials */}
-          <div className="w-full md:col-span-3 lg:col-span-2 space-y-4">
-            <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
-              CONNECT
-            </span>
-            <ul className="space-y-3 text-xs tracking-wider uppercase">
-              <li>
-                <a
-                  href={BRAND.whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-[#00E5FF] transition-colors group"
-                >
-                  <span>WhatsApp Direct</span>
-                  <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={BRAND.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-[#00E5FF] transition-colors group"
-                >
-                  <span>Instagram</span>
-                  <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={BRAND.mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 hover:text-[#00E5FF] transition-colors group"
-                >
-                  <span>Google Maps</span>
-                  <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </a>
-              </li>
-            </ul>
+                <li>
+                  <a
+                    href={BRAND.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-[#00E5FF] transition-colors group"
+                  >
+                    <span>Instagram</span>
+                    <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={BRAND.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-[#00E5FF] transition-colors group"
+                  >
+                    <span>Google Maps</span>
+                    <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Google Map Widget (Original Responsive Embed) */}

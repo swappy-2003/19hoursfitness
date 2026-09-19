@@ -9,7 +9,7 @@ export default function Location() {
   return (
     <section
       id="location"
-      className="relative z-20 w-full min-h-[70vh] bg-[#08090B] py-32 px-6 md:px-12 border-t border-white/[0.06] flex flex-col justify-center"
+      className="relative z-20 w-full lg:min-h-[70vh] bg-[#08090B] py-16 sm:py-20 md:py-28 lg:py-32 px-6 md:px-12 border-t border-white/[0.06] flex flex-col justify-center"
     >
       <div className="max-w-[1440px] mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
