@@ -15,7 +15,11 @@ export default function TypographicBreak() {
     if (!container || !line1 || !line2) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+    const isMobile = window.innerWidth < 768 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (prefersReducedMotion || isMobile) {
+      gsap.set([line1, line2], { yPercent: 0, opacity: 1 });
+      return;
+    }
 
     gsap.set([line1, line2], { yPercent: 120, opacity: 0 });
 

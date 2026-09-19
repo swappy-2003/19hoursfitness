@@ -23,8 +23,16 @@ export default function Hero() {
     if (!hero || !imageWrapper || !textGroup) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.innerWidth < 1024 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
-    // Initial entrance animation
+    if (isMobile || prefersReducedMotion) {
+      gsap.set(imageWrapper, { scale: 1, opacity: 1 });
+      gsap.set(eyebrow, { y: 0, opacity: 1 });
+      gsap.set(headline?.querySelectorAll(".hero-line") ?? [], { yPercent: 0, opacity: 1 });
+      return;
+    }
+
+    // Initial entrance animation on desktop
     const tl = gsap.timeline({ delay: 0.2 });
 
     tl.fromTo(
@@ -44,8 +52,6 @@ export default function Hero() {
         { yPercent: 0, opacity: 1, duration: 1.1, stagger: 0.1, ease: "power4.out" },
         "-=0.9"
       );
-
-    if (prefersReducedMotion) return;
 
     // Subtle desktop mouse parallax (max 15px)
     const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -75,7 +81,7 @@ export default function Hero() {
       mouseCleanup = () => window.removeEventListener("mousemove", handleMouseMove);
     }
 
-    // ScrollTrigger cinematic transition
+    // ScrollTrigger cinematic transition (Desktop only)
     const scrollTl = gsap.timeline({
       scrollTrigger: {
         trigger: hero,

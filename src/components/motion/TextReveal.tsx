@@ -33,7 +33,8 @@ export default function TextReveal({
     if (!items.length) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
+    const isMobile = window.innerWidth < 768 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (prefersReducedMotion || isMobile) {
       gsap.set(items, { yPercent: 0, opacity: 1 });
       return;
     }

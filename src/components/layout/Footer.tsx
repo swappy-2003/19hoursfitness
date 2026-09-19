@@ -8,9 +8,9 @@ export default function Footer() {
   return (
     <footer className="relative z-20 w-full bg-[#08090B] border-t border-white/[0.08] pt-20 pb-12 px-6 md:px-12 text-[#969BA3]">
       <div className="max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pb-16 border-b border-white/[0.08]">
+        <div className="flex flex-col md:grid md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 pb-16 border-b border-white/[0.08]">
           {/* Brand Info */}
-          <div className="md:col-span-6 lg:col-span-4 space-y-6">
+          <div className="w-full md:col-span-6 lg:col-span-4 space-y-6">
             <Link href="/" className="inline-flex items-center gap-4">
               <Image
                 src="/images/logo.png"
@@ -37,7 +37,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Navigation */}
-          <div className="md:col-span-3 lg:col-span-2 space-y-4">
+          <div className="w-full md:col-span-3 lg:col-span-2 space-y-4">
             <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
               NAVIGATION
             </span>
@@ -56,7 +56,7 @@ export default function Footer() {
           </div>
 
           {/* Contact & Socials */}
-          <div className="md:col-span-3 lg:col-span-2 space-y-4">
+          <div className="w-full md:col-span-3 lg:col-span-2 space-y-4">
             <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
               CONNECT
             </span>
@@ -98,7 +98,7 @@ export default function Footer() {
           </div>
 
           {/* Google Map Widget (Original Responsive Embed) */}
-          <div className="col-span-12 lg:col-span-4 space-y-4 w-full min-w-0">
+          <div className="w-full md:col-span-12 lg:col-span-4 space-y-4 min-w-0">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
                 LOCATION MAP
