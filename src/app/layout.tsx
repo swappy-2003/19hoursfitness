@@ -4,7 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import CustomCursor from "@/components/ui/CustomCursor";
 import GrainOverlay from "@/components/ui/GrainOverlay";
-import Preloader from "@/components/layout/Preloader";
+import VideoIntro from "@/components/layout/VideoIntro";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingActions from "@/components/ui/FloatingActions";
@@ -138,7 +138,7 @@ export default function RootLayout({
         <SmoothScroll>
           <GrainOverlay />
           <CustomCursor />
-          <Preloader />
+          <VideoIntro />
           <Navbar />
           <main className="relative z-10">{children}</main>
           <Footer />
