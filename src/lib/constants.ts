@@ -6,8 +6,9 @@ export const BRAND = {
   location: "Virar West, Maharashtra, India",
   fullAddress: "Plot No. 201–202, Varkhana Bhavan, Viva College Road, Virar West, Maharashtra 401303",
   hours: "Mon – Sat: 5:30 AM – 11:00 PM | Sun: 7:00 AM – 8:00 PM",
-  phone: "+91 98200 00000", // Representative placeholder for booking
-  whatsappUrl: "https://wa.me/919820000000?text=Hi%2019%20Hours%20Fitness%2C%20I%20would%20like%20to%20book%20a%20free%20trial%20session.",
+  phone: "+91 83906 79679",
+  whatsappNumber: "918390679679",
+  whatsappUrl: "https://wa.me/918390679679?text=Hi%2019%20Hours%20Fitness%2C%20I%20would%20like%20to%20book%20a%20free%20trial%20session.",
   mapsUrl: "https://maps.google.com/?q=19+Hours+Fitness+Virar+West+Maharashtra",
   instagramUrl: "https://instagram.com/19hoursfitness",
   instagramHandle: "@19HOURSFITNESS",

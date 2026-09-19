@@ -58,7 +58,7 @@ export default function Trainers() {
               {/* Card Footer / Book 1-on-1 */}
               <div className="mt-8 pt-6 border-t border-white/[0.06] flex items-center justify-between">
                 <a
-                  href={`${BRAND.whatsappUrl}&text=Hi%2019%20Hours%20Fitness%2C%20I%20would%20like%20to%20train%20with%20${encodeURIComponent(
+                  href={`https://wa.me/${BRAND.whatsappNumber}?text=Hi%2019%20Hours%20Fitness%2C%20I%20would%20like%20to%20train%20with%20${encodeURIComponent(
                     trainer.name
                   )}`}
                   target="_blank"
