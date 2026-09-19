@@ -126,8 +126,8 @@ export default function Trainers() {
                 {/* Subtle Ambient Hover Glow */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E5FF]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                {/* Trainer Photo Card (Calibrated height to fit cleanly in viewport) */}
-                <div className="relative w-full h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] overflow-hidden bg-[#101216]">
+                {/* Trainer Photo Card (Expanded height to display full portrait and physique) */}
+                <div className="relative w-full h-[380px] sm:h-[420px] md:h-[460px] lg:h-[500px] overflow-hidden bg-[#101216]">
                   <Image
                     src={trainer.image}
                     alt={`${trainer.name} - 19 Hours Fitness Coach`}
@@ -136,8 +136,8 @@ export default function Trainers() {
                     className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   />
 
-                  {/* Gradient Vignette to blend into dark card */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#101216] via-transparent to-black/15" />
+                  {/* Soft bottom gradient to smoothly blend into the dark card footer */}
+                  <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#101216] via-[#101216]/50 to-transparent pointer-events-none" />
 
                   {/* Top Coach Number Badge */}
                   <div className="absolute top-3.5 left-3.5 font-mono text-xs tracking-widest text-[#00E5FF] font-semibold bg-[#08090B]/85 backdrop-blur-md px-2.5 py-1 border border-white/10">
