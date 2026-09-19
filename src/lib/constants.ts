@@ -184,7 +184,7 @@ export const TRAINERS = [
     name: "Swapnil Gothal",
     role: "Strength & Performance Coach",
     discipline: "Powerlifting & Biomechanics",
-    image: "/images/experience/strength.jpg",
+    image: "/images/trainers/swapnil-gothal.png",
   },
   {
     id: "nilesh-patekar",
@@ -192,7 +192,7 @@ export const TRAINERS = [
     name: "Nilesh Patekar",
     role: "CrossFit & Conditioning Specialist",
     discipline: "High-Intensity Functional Training",
-    image: "/images/experience/crossfit.jpg",
+    image: "/images/trainers/nilesh-patekar.png",
   },
   {
     id: "swapnil-pendhare",
@@ -200,7 +200,7 @@ export const TRAINERS = [
     name: "Swapnil Pendhare",
     role: "Transformation & Hypertrophy Coach",
     discipline: "Body Recomposition & Nutrition",
-    image: "/images/training/muscle.jpg",
+    image: "/images/trainers/swapnil-pendhare.png",
   },
   {
     id: "prasad-mestry",
@@ -208,7 +208,7 @@ export const TRAINERS = [
     name: "Prasad Mestry",
     role: "Elite Personal Trainer",
     discipline: "Strength Periodization & Mobility",
-    image: "/images/experience/pt.jpg",
+    image: "/images/trainers/prasad-mestry.png",
   },
   {
     id: "ravikant-khadtare",
@@ -216,7 +216,7 @@ export const TRAINERS = [
     name: "Ravikant Khadtare",
     role: "Athletic Conditioning Specialist",
     discipline: "Cardio Engine & Agility",
-    image: "/images/training/conditioning.jpg",
+    image: "/images/trainers/ravikant-khadtare.png",
   },
   {
     id: "harpinder-singh",
@@ -224,7 +224,7 @@ export const TRAINERS = [
     name: "Harpinder Singh",
     role: "Strength & Resistance Coach",
     discipline: "Barbell Mastery & Muscle Gain",
-    image: "/images/training/strength.jpg",
+    image: "/images/trainers/harpinder-singh.png",
   },
   {
     id: "gaurav-satam",
@@ -232,7 +232,7 @@ export const TRAINERS = [
     name: "Gaurav Satam",
     role: "Functional & Strength Specialist",
     discipline: "Athletic Performance & Core Stability",
-    image: "/images/training/fatloss.jpg",
+    image: "/images/trainers/gaurav-satam.png",
   },
 ];
 

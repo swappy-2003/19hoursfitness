@@ -127,17 +127,17 @@ export default function Trainers() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E5FF]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                 {/* Trainer Photo Card (Calibrated height to fit cleanly in viewport) */}
-                <div className="relative w-full h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] overflow-hidden bg-[#14171d]">
+                <div className="relative w-full h-[220px] sm:h-[240px] md:h-[260px] lg:h-[280px] overflow-hidden bg-[#101216]">
                   <Image
                     src={trainer.image}
                     alt={`${trainer.name} - 19 Hours Fitness Coach`}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                   />
 
-                  {/* Gradient Vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#101216] via-[#101216]/30 to-transparent" />
+                  {/* Gradient Vignette to blend into dark card */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#101216] via-transparent to-black/15" />
 
                   {/* Top Coach Number Badge */}
                   <div className="absolute top-3.5 left-3.5 font-mono text-xs tracking-widest text-[#00E5FF] font-semibold bg-[#08090B]/85 backdrop-blur-md px-2.5 py-1 border border-white/10">
