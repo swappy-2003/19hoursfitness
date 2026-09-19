@@ -241,7 +241,7 @@ export default function Hero() {
         {/* Mobile-only video */}
         <video
           ref={videoRef}
-          src="/images/InShot_20260919_195421076.mp4"
+          src="/images/experience/Video-14356.mp4"
           className="hero-media__mobile-video"
           playsInline
           autoPlay
