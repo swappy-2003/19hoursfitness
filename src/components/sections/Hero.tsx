@@ -16,9 +16,10 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [isMobile, setIsMobile] = useState(false);
+  const [isIntroActive, setIsIntroActive] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
 
-  // Guarantee mobile video autoplay
+  // Guarantee mobile video autoplay & loop
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
@@ -44,6 +45,11 @@ export default function Hero() {
     const mobileCheck = window.innerWidth < 1024 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
     const phoneCheck = window.innerWidth < 768;
     setIsMobile(phoneCheck);
+
+    // On desktop, intro is never active
+    if (!phoneCheck) {
+      setIsIntroActive(false);
+    }
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -149,6 +155,16 @@ export default function Hero() {
     };
   }, []);
 
+  const handleSkipIntro = () => {
+    setIsIntroActive(false);
+    // Mute video when entering standard website mode
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      setIsMuted(true);
+    }
+  };
+
   const toggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
     const video = videoRef.current;
@@ -161,7 +177,10 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative w-full h-screen overflow-hidden bg-[#08090B] flex flex-col justify-between px-6 md:px-12 pt-28 pb-12 select-none"
+      onClick={isMobile && isIntroActive ? handleSkipIntro : undefined}
+      className={`relative w-full h-screen overflow-hidden bg-[#08090B] flex flex-col justify-between px-6 md:px-12 pt-28 pb-12 select-none ${
+        isMobile && isIntroActive ? "cursor-pointer" : ""
+      }`}
     >
       {/* Background Media: Desktop Image / Mobile Video (with fallback poster) */}
       <div
@@ -185,10 +204,11 @@ export default function Hero() {
           src="/images/experience/Video-14356.mp4"
           poster="/images/realHero.png"
           autoPlay
-          muted
+          muted={isMuted}
           loop
           playsInline
           preload="auto"
+          onEnded={handleSkipIntro}
           className="block md:hidden w-full h-full object-cover brightness-[0.92] contrast-[1.05]"
         />
 
@@ -197,10 +217,48 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/60 via-transparent to-[#08090B]/30 pointer-events-none" />
       </div>
 
-      {/* Eyebrow / Location */}
+      {/* MOBILE VIDEO INTRO OVERLAY (Matches user screenshot: UNMUTE top right + TAP SCREEN TO SKIP bottom) */}
+      {isMobile && isIntroActive && (
+        <div className="absolute inset-0 z-30 flex flex-col justify-between p-6 pointer-events-auto">
+          {/* Top Right: UNMUTE Pill Button */}
+          <div className="flex justify-end pt-4">
+            <button
+              onClick={toggleSound}
+              aria-label={isMuted ? "Unmute video" : "Mute video"}
+              className="inline-flex items-center gap-2 bg-black/60 hover:bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-[#F5F5F5] font-mono text-xs font-semibold tracking-wider uppercase active:scale-95 transition-all shadow-lg"
+            >
+              {isMuted ? (
+                <>
+                  <VolumeX className="w-4 h-4 text-white/80" />
+                  <span>UNMUTE</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-4 h-4 text-[#00E5FF]" />
+                  <span className="text-[#00E5FF]">MUTE</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Bottom Center: TAP SCREEN TO SKIP Pill Button */}
+          <div className="flex justify-center pb-8">
+            <button
+              onClick={handleSkipIntro}
+              className="bg-black/60 hover:bg-black/80 backdrop-blur-md px-6 py-2.5 rounded-full border border-white/15 text-white/90 font-mono text-xs font-medium tracking-wider uppercase active:scale-95 transition-all shadow-lg"
+            >
+              TAP SCREEN TO SKIP
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Eyebrow / Location (Hidden during intro, smoothly reveals on skip) */}
       <div
         ref={eyebrowRef}
-        className="relative z-10 pt-4"
+        className={`relative z-10 pt-4 transition-all duration-700 ${
+          isMobile && isIntroActive ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"
+        }`}
       >
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-3 bg-[#08090B]/75 backdrop-blur-md px-3.5 py-1.5 border border-white/10 shadow-lg">
@@ -216,8 +274,8 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Sound Toggle on Mobile */}
-          {isMobile && (
+          {/* Sound Toggle on Mobile after entering normal site */}
+          {isMobile && !isIntroActive && (
             <button
               onClick={toggleSound}
               aria-label={isMuted ? "Unmute video" : "Mute video"}
@@ -239,10 +297,12 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Main Massive Editorial Typography */}
+      {/* Main Massive Editorial Typography (Hidden during intro, smoothly reveals on skip) */}
       <div
         ref={textGroupRef}
-        className="relative z-10 my-auto will-change-transform"
+        className={`relative z-10 my-auto will-change-transform transition-all duration-700 ${
+          isMobile && isIntroActive ? "opacity-0 translate-y-6 pointer-events-none" : "opacity-100 translate-y-0"
+        }`}
       >
         <h1
           ref={headlineRef}
@@ -263,10 +323,12 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* Bottom Bar & Scroll Indicator */}
+      {/* Bottom Bar & Scroll Indicator (Hidden during intro, reveals on skip) */}
       <div
         ref={scrollIndicatorRef}
-        className="relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3]"
+        className={`relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3] transition-all duration-700 ${
+          isMobile && isIntroActive ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
       >
         <div className="hidden sm:block uppercase">
           STRENGTH · CROSSFIT · RECOVERY
