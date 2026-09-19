@@ -10,6 +10,7 @@ export default function Hero() {
   const [isMobile, setIsMobile] = useState(false);
   const [isRevealed, setIsRevealed] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
@@ -224,17 +225,28 @@ export default function Hero() {
           className="hidden md:block object-cover object-center brightness-[0.92] contrast-[1.05]"
         />
 
-        {/* Mobile-only video */}
+        {/* Mobile fallback image — always visible behind video so screen is never black */}
+        <Image
+          src="/images/realHero.png"
+          alt="19 Hours Fitness"
+          fill
+          priority
+          sizes="100vw"
+          className="md:hidden object-cover object-center"
+        />
+
+        {/* Mobile-only video — starts invisible, fades in when it has actual frames */}
         <video
           ref={videoRef}
-          src="/images/experience/Video-14356.mp4"
-          poster="/images/realHero.png"
+          src="/images/Video-14356.mp4"
           className="hero-media__mobile-video"
+          style={{ opacity: videoReady ? 1 : 0, transition: "opacity 0.4s ease" }}
           playsInline
           autoPlay
           muted={isMuted}
           loop={isRevealed}
           onEnded={handleReveal}
+          onPlaying={() => setVideoReady(true)}
           preload="auto"
         />
 
