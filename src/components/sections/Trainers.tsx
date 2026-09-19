@@ -108,9 +108,9 @@ export default function Trainers() {
         </div>
 
         {/* Responsive Swiper / Slider Container:
-            - Desktop (lg:): Exactly 3 cards visible per viewport (w-[calc((100%-3rem)/3)])
-            - Tablet (md:): 2 cards visible per viewport (w-[calc((100%-1.5rem)/2)])
-            - Mobile (< md:): 1 card with peek (w-[85vw] / max-w-[340px])
+            - Desktop (lg:): Exactly 3 cards visible per viewport
+            - Tablet (md:): Exactly 2 cards visible per viewport
+            - Mobile (< md:): Exactly 1 card visible full width in viewport
         */}
         <div className="relative w-full">
           <div
@@ -121,18 +121,18 @@ export default function Trainers() {
             {TRAINERS.map((trainer, index) => (
               <div
                 key={trainer.id}
-                className="group relative flex-none w-[85vw] sm:w-[340px] md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] snap-start flex flex-col bg-[#101216] border border-white/[0.08] hover:border-[#00E5FF]/40 transition-all duration-300 overflow-hidden"
+                className="group relative flex-none w-full md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] snap-start flex flex-col bg-[#101216] border border-white/[0.08] hover:border-[#00E5FF]/40 transition-all duration-300 overflow-hidden"
               >
                 {/* Subtle Ambient Hover Glow */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E5FF]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                {/* Trainer Photo Card */}
-                <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] overflow-hidden bg-[#14171d]">
+                {/* Trainer Photo Card (Calibrated height to fit cleanly in viewport) */}
+                <div className="relative w-full h-[200px] sm:h-[220px] md:h-[240px] lg:h-[260px] overflow-hidden bg-[#14171d]">
                   <Image
                     src={trainer.image}
                     alt={`${trainer.name} - 19 Hours Fitness Coach`}
                     fill
-                    sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                   />
 
@@ -140,25 +140,25 @@ export default function Trainers() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#101216] via-[#101216]/30 to-transparent" />
 
                   {/* Top Coach Number Badge */}
-                  <div className="absolute top-4 left-4 font-mono text-xs tracking-widest text-[#00E5FF] font-semibold bg-[#08090B]/85 backdrop-blur-md px-3 py-1 border border-white/10">
+                  <div className="absolute top-3.5 left-3.5 font-mono text-xs tracking-widest text-[#00E5FF] font-semibold bg-[#08090B]/85 backdrop-blur-md px-2.5 py-1 border border-white/10">
                     {trainer.number}
                   </div>
 
                   {/* Location Tag */}
-                  <div className="absolute top-4 right-4 font-mono text-[10px] tracking-wider text-[#F5F5F5]/80 uppercase bg-[#08090B]/85 backdrop-blur-md px-2.5 py-1 border border-white/10">
+                  <div className="absolute top-3.5 right-3.5 font-mono text-[10px] tracking-wider text-[#F5F5F5]/80 uppercase bg-[#08090B]/85 backdrop-blur-md px-2.5 py-1 border border-white/10">
                     VIRAR WEST
                   </div>
                 </div>
 
                 {/* Trainer Details */}
-                <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                   <div>
                     {/* Trainer Name in Bold Display Typography */}
-                    <h3 className="font-display font-bold text-2xl md:text-3xl text-[#F5F5F5] uppercase tracking-tight group-hover:text-[#00E5FF] transition-colors duration-300">
+                    <h3 className="font-display font-bold text-xl sm:text-2xl md:text-3xl text-[#F5F5F5] uppercase tracking-tight group-hover:text-[#00E5FF] transition-colors duration-300">
                       {trainer.name}
                     </h3>
 
-                    <p className="mt-2 font-mono text-xs uppercase tracking-wider text-[#00E5FF] font-medium">
+                    <p className="mt-1.5 font-mono text-xs uppercase tracking-wider text-[#00E5FF] font-medium">
                       {trainer.role}
                     </p>
                     <p className="mt-1 text-xs text-[#969BA3] font-light leading-relaxed">
@@ -167,7 +167,7 @@ export default function Trainers() {
                   </div>
 
                   {/* Card Footer / Direct WhatsApp 1-on-1 */}
-                  <div className="mt-6 pt-5 border-t border-white/[0.06] flex items-center justify-between">
+                  <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between">
                     <a
                       href={`https://wa.me/${BRAND.whatsappNumber}?text=Hi%2019%20Hours%20Fitness%2C%20I%20would%20like%20to%20train%20with%20${encodeURIComponent(
                         trainer.name
@@ -187,7 +187,7 @@ export default function Trainers() {
             ))}
           </div>
 
-          {/* Bottom Progress / Index Indicator */}
+          {/* Bottom Progress & Dot Indicators */}
           <div className="mt-6 flex items-center justify-between text-xs font-mono tracking-widest text-[#969BA3]">
             <div className="flex items-center gap-2">
               <span className="text-[#00E5FF]">
@@ -197,8 +197,31 @@ export default function Trainers() {
               <span>0{TRAINERS.length} COACHES</span>
             </div>
 
+            {/* Pagination Dots */}
+            <div className="flex items-center gap-1.5">
+              {TRAINERS.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    const slider = sliderRef.current;
+                    if (!slider) return;
+                    const card = slider.children[idx] as HTMLElement;
+                    if (card) {
+                      card.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+                    }
+                  }}
+                  aria-label={`Go to trainer ${idx + 1}`}
+                  className={`h-1.5 transition-all duration-300 rounded-full ${
+                    idx === activeIndex
+                      ? "w-6 bg-[#00E5FF]"
+                      : "w-1.5 bg-white/20 hover:bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
+
             <span className="hidden sm:inline text-[11px] text-[#969BA3]/60 uppercase">
-              DRAG OR USE ARROWS TO BROWSE
+              DRAG OR USE ARROWS
             </span>
           </div>
         </div>
