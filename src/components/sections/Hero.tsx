@@ -139,16 +139,16 @@ export default function Hero() {
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-center brightness-[0.7] contrast-[1.15]"
+          className="object-cover object-center brightness-[0.92] contrast-[1.05]"
         />
-        {/* Cinematic Vignette and Dark Editorial Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#08090B] via-[#08090B]/40 to-[#08090B]/70" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/80 via-transparent to-[#08090B]/80" />
+        {/* Soft Cinematic Vignette and Smooth Section Blend */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#08090B] via-[#08090B]/25 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#08090B]/60 via-transparent to-[#08090B]/30" />
       </div>
 
       {/* Eyebrow / Location */}
       <div ref={eyebrowRef} className="relative z-10 pt-4 opacity-0">
-        <div className="inline-flex items-center gap-3 bg-[#08090B]/60 backdrop-blur-sm px-3.5 py-1.5 border border-white/10">
+        <div className="inline-flex items-center gap-3 bg-[#08090B]/75 backdrop-blur-md px-3.5 py-1.5 border border-white/10 shadow-lg">
           <Image
             src="/images/logo.png"
             alt="19 Hours Fitness Logo"
@@ -166,7 +166,7 @@ export default function Hero() {
       <div ref={textGroupRef} className="relative z-10 my-auto will-change-transform">
         <h1
           ref={headlineRef}
-          className="font-display font-black tracking-tight text-huge leading-[0.85] text-[#F5F5F5] uppercase"
+          className="font-display font-black tracking-tight text-huge leading-[0.85] text-[#F5F5F5] uppercase drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
         >
           <span className="block overflow-hidden">
             <span className="hero-line block text-[#F5F5F5]">19 HOURS</span>
@@ -178,7 +178,7 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className="mt-6 md:mt-8 max-w-xl text-sm md:text-lg text-[#969BA3] font-light tracking-wide leading-relaxed">
+        <p className="mt-6 md:mt-8 max-w-xl text-sm md:text-lg text-[#F5F5F5]/90 font-light tracking-wide leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
           {BRAND.tagline} A sanctuary for athletic discipline, progressive strength, and high-performance living in Virar West.
         </p>
       </div>
