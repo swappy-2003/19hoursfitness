@@ -7,8 +7,10 @@ import { Menu, X, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { BRAND, NAV_LINKS } from "@/lib/constants";
 import MagneticButton from "@/components/ui/MagneticButton";
+import { useVideoIntro } from "@/contexts/VideoIntroContext";
 
 export default function Navbar() {
+  const { introPlaying } = useVideoIntro();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -63,7 +65,9 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out ${
+          introPlaying ? "navbar-intro-hidden" : ""
+        } ${
           scrolled
             ? "bg-[#08090B]/85 backdrop-blur-md border-b border-white/[0.08] py-4"
             : "bg-transparent py-7"

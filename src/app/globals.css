@@ -132,3 +132,157 @@ body {
   }
 }
 
+/* ============================================================
+   Mobile Video Intro Overlay (<= 800px)
+   ============================================================ */
+
+/* Intro overlay — sits over hero video, below everything else */
+.video-intro-overlay {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .video-intro-overlay {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: env(safe-area-inset-bottom, 40px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 40px);
+    pointer-events: auto;
+  }
+
+  .video-intro-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(8, 9, 11, 0.6) 0%,
+      transparent 40%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Button row at bottom */
+  .video-intro-controls {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Glassmorphic pill button */
+  .video-intro-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    color: #f5f5f5;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .video-intro-btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .video-intro-btn--skip {
+    position: relative;
+    padding-left: 16px;
+  }
+
+  .video-intro-btn--unmute.is-unmuted {
+    border-color: rgba(0, 229, 255, 0.4);
+    color: #00e5ff;
+  }
+
+  /* Circular progress ring around skip button */
+  .skip-progress-ring {
+    position: absolute;
+    inset: -3px;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    border-radius: 50px;
+    pointer-events: none;
+  }
+
+  .skip-progress-ring__circle {
+    fill: none;
+    stroke: rgba(0, 229, 255, 0.5);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s linear;
+  }
+
+  /* Fade-out transition for the overlay */
+  .video-intro-overlay.is-exiting {
+    animation: introFadeOut 0.6s ease-out forwards;
+  }
+
+  @keyframes introFadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+  }
+
+  /* Subtle entry pulse on the buttons */
+  .video-intro-controls {
+    animation: introBtnEntry 0.8s ease-out 0.5s both;
+  }
+
+  @keyframes introBtnEntry {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hide hero content during intro */
+  .hero-intro-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Navbar hidden during intro */
+  .navbar-intro-hidden {
+    opacity: 0 !important;
+    transform: translateY(-100%) !important;
+    pointer-events: none !important;
+  }
+
+  /* Floating actions hidden during intro */
+  .floating-intro-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+

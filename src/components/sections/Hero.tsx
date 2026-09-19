@@ -1,14 +1,18 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
-import { ArrowDown, Volume2, VolumeX } from "lucide-react";
+import { ArrowDown, Volume2, VolumeX, SkipForward } from "lucide-react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { BRAND } from "@/lib/constants";
+import { useVideoIntro } from "@/contexts/VideoIntroContext";
 
 export default function Hero() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const { introPlaying, completeIntro } = useVideoIntro();
+  const [introExiting, setIntroExiting] = useState(false);
+  const hasRevealedRef = useRef(false);
 
   const heroRef = useRef<HTMLElement>(null);
   const imageWrapperRef = useRef<HTMLDivElement>(null);
@@ -17,6 +21,7 @@ export default function Hero() {
   const eyebrowRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile
   useEffect(() => {
@@ -49,6 +54,131 @@ export default function Hero() {
     }
   };
 
+  // ---------- Mobile intro reveal choreography ----------
+  const runRevealAnimation = useCallback(() => {
+    if (hasRevealedRef.current) return;
+    hasRevealedRef.current = true;
+
+    const eyebrow = eyebrowRef.current;
+    const headline = headlineRef.current;
+    const textGroup = textGroupRef.current;
+    const scrollIndicator = scrollIndicatorRef.current;
+
+    // Step 1: Guarantee video keeps looping smoothly and in mute as hero background
+    if (videoRef.current) {
+      videoRef.current.loop = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+    setIsMuted(true);
+
+    // Step 2: Fade out intro controls overlay
+    setIntroExiting(true);
+
+    // Step 3: Staggered GSAP reveal of all hero UI
+    const revealTl = gsap.timeline({ delay: 0.35 });
+
+    // Eyebrow badge slides in
+    if (eyebrow) {
+      revealTl.fromTo(
+        eyebrow,
+        { x: -25, opacity: 0, visibility: "visible" },
+        { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        0
+      );
+    }
+
+    // Main headline lines reveal upward
+    const heroLines = headline?.querySelectorAll(".hero-line") ?? [];
+    if (heroLines.length > 0) {
+      revealTl.fromTo(
+        heroLines,
+        { yPercent: 110, opacity: 0 },
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.85,
+          stagger: 0.1,
+          ease: "power4.out",
+        },
+        0.1
+      );
+    }
+
+    // Subtitle paragraph
+    if (textGroup) {
+      const subtitle = textGroup.querySelector("p");
+      if (subtitle) {
+        revealTl.fromTo(
+          subtitle,
+          { y: 15, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+          0.45
+        );
+      }
+      revealTl.set(textGroup, { visibility: "visible", opacity: 1 }, 0);
+    }
+
+    // Scroll indicator at bottom
+    if (scrollIndicator) {
+      revealTl.fromTo(
+        scrollIndicator,
+        { y: 15, opacity: 0, visibility: "visible" },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+        0.65
+      );
+    }
+
+    // Intro completes once reveal is underway
+    revealTl.call(() => {
+      completeIntro();
+      setIntroExiting(false);
+    }, undefined, 0.7);
+  }, [completeIntro]);
+
+  // Handle video ended (if user doesn't skip, video ends naturally)
+  useEffect(() => {
+    if (!isMobile || !introPlaying) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleEnded = () => {
+      // Restart the video to loop, then reveal
+      video.currentTime = 0;
+      video.play().catch(() => {});
+      runRevealAnimation();
+    };
+
+    video.addEventListener("ended", handleEnded);
+    return () => video.removeEventListener("ended", handleEnded);
+  }, [isMobile, introPlaying, runRevealAnimation]);
+
+  const handleSkip = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Video continues playing — we just reveal the UI
+    runRevealAnimation();
+  };
+
+  // Skip-button progress ring: track video currentTime / duration
+  const [videoProgress, setVideoProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isMobile || !introPlaying) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      if (video.duration && isFinite(video.duration)) {
+        setVideoProgress(video.currentTime / video.duration);
+      }
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    return () => video.removeEventListener("timeupdate", handleTimeUpdate);
+  }, [isMobile, introPlaying]);
+
   // Desktop animations (mouse parallax and scrollTrigger - 100% untouched)
   useEffect(() => {
     const hero = heroRef.current;
@@ -62,9 +192,13 @@ export default function Hero() {
     const isMobileDevice = window.innerWidth <= 800 || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 
     if (isMobileDevice || prefersReducedMotion) {
-      gsap.set(imageWrapper, { scale: 1, opacity: 1 });
-      gsap.set(eyebrow, { y: 0, opacity: 1 });
-      gsap.set(headline?.querySelectorAll(".hero-line") ?? [], { yPercent: 0, opacity: 1 });
+      // On mobile, if intro is NOT playing, set elements visible immediately
+      // If intro IS playing, the reveal animation handles visibility
+      if (!introPlaying) {
+        gsap.set(imageWrapper, { scale: 1, opacity: 1 });
+        gsap.set(eyebrow, { y: 0, opacity: 1 });
+        gsap.set(headline?.querySelectorAll(".hero-line") ?? [], { yPercent: 0, opacity: 1 });
+      }
       return;
     }
 
@@ -161,6 +295,7 @@ export default function Hero() {
       scrollTl.kill();
       if (mouseCleanup) mouseCleanup();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -204,7 +339,7 @@ export default function Hero() {
           playsInline
           autoPlay
           muted
-          loop
+          loop={!introPlaying}
           preload="metadata"
         />
 
@@ -216,8 +351,74 @@ export default function Hero() {
         <div className="md:hidden absolute inset-0 bg-gradient-to-t from-[#08090B] via-transparent to-transparent pointer-events-none" />
       </div>
 
+      {/* ========== MOBILE INTRO OVERLAY ========== */}
+      {isMobile && introPlaying && (
+        <div
+          ref={overlayRef}
+          className={`video-intro-overlay ${introExiting ? "is-exiting" : ""}`}
+        >
+          <div className="video-intro-controls">
+            {/* Unmute button */}
+            <button
+              onClick={toggleSound}
+              aria-label={isMuted ? "Unmute video" : "Mute video"}
+              className={`video-intro-btn video-intro-btn--unmute ${!isMuted ? "is-unmuted" : ""}`}
+            >
+              {isMuted ? (
+                <>
+                  <VolumeX className="w-4 h-4" />
+                  <span>Unmute</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-4 h-4" />
+                  <span>Sound On</span>
+                </>
+              )}
+            </button>
+
+            {/* Skip button with countdown progress ring around icon */}
+            <button
+              onClick={handleSkip}
+              aria-label="Skip intro"
+              className="video-intro-btn video-intro-btn--skip"
+            >
+              <div className="relative flex items-center justify-center w-5 h-5">
+                <svg className="w-5 h-5 -rotate-90">
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="8"
+                    stroke="rgba(255, 255, 255, 0.2)"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="8"
+                    stroke="#00E5FF"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 8}
+                    strokeDashoffset={2 * Math.PI * 8 * (1 - videoProgress)}
+                    strokeLinecap="round"
+                    className="transition-[stroke-dashoffset] duration-150"
+                  />
+                </svg>
+                <SkipForward className="w-2.5 h-2.5 text-[#F5F5F5] absolute" />
+              </div>
+              <span>Skip</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Eyebrow / Location */}
-      <div ref={eyebrowRef} className="relative z-10 pt-4">
+      <div
+        ref={eyebrowRef}
+        className={`relative z-10 pt-4 ${isMobile && introPlaying ? "hero-intro-hidden" : ""}`}
+      >
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-3 bg-[#08090B]/75 backdrop-blur-md px-3.5 py-1.5 border border-white/10 shadow-lg">
             <Image
@@ -231,32 +432,14 @@ export default function Hero() {
               {BRAND.eyebrow}
             </span>
           </div>
-
-          {/* Sound Toggle on Mobile */}
-          {isMobile && (
-            <button
-              onClick={toggleSound}
-              aria-label={isMuted ? "Unmute video" : "Mute video"}
-              className="inline-flex items-center gap-1.5 bg-[#08090B]/80 backdrop-blur-md px-3 py-1.5 border border-white/10 text-[#F5F5F5] font-mono text-[10px] tracking-wider uppercase active:scale-95 transition-all"
-            >
-              {isMuted ? (
-                <>
-                  <VolumeX className="w-3 h-3 text-[#969BA3]" />
-                  <span>UNMUTE</span>
-                </>
-              ) : (
-                <>
-                  <Volume2 className="w-3 h-3 text-[#00E5FF]" />
-                  <span className="text-[#00E5FF]">SOUND ON</span>
-                </>
-              )}
-            </button>
-          )}
         </div>
       </div>
 
       {/* Main Massive Editorial Typography */}
-      <div ref={textGroupRef} className="relative z-10 my-auto will-change-transform">
+      <div
+        ref={textGroupRef}
+        className={`relative z-10 my-auto will-change-transform ${isMobile && introPlaying ? "hero-intro-hidden" : ""}`}
+      >
         <h1
           ref={headlineRef}
           className="font-display font-black tracking-tight text-huge leading-[0.85] text-[#F5F5F5] uppercase drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
@@ -279,7 +462,7 @@ export default function Hero() {
       {/* Bottom Bar & Scroll Indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3]"
+        className={`relative z-10 flex items-end justify-between border-t border-white/[0.08] pt-6 text-[11px] font-mono tracking-[0.25em] text-[#969BA3] ${isMobile && introPlaying ? "hero-intro-hidden" : ""}`}
       >
         <div className="hidden sm:block uppercase">
           STRENGTH · CROSSFIT · RECOVERY

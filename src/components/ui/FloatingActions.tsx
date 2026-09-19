@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { BRAND } from "@/lib/constants";
 import MagneticButton from "./MagneticButton";
+import { useVideoIntro } from "@/contexts/VideoIntroContext";
 
 export default function FloatingActions() {
+  const { introPlaying } = useVideoIntro();
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
@@ -29,7 +31,9 @@ export default function FloatingActions() {
   };
 
   return (
-    <div className="floating-actions fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
+    <div className={`floating-actions fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none transition-opacity duration-700 ${
+      introPlaying ? "floating-intro-hidden" : "opacity-100"
+    }`}>
       {/* Back to Top Button */}
       <div
         className={`pointer-events-auto transition-all duration-500 ease-out ${

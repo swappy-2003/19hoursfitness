@@ -9,6 +9,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingActions from "@/components/ui/FloatingActions";
 import { BRAND } from "@/lib/constants";
+import { VideoIntroProvider } from "@/contexts/VideoIntroContext";
 
 const oswald = Oswald({
   variable: "--font-display",
@@ -139,10 +140,12 @@ export default function RootLayout({
           <GrainOverlay />
           <CustomCursor />
           <Preloader />
-          <Navbar />
-          <main className="relative z-10">{children}</main>
-          <Footer />
-          <FloatingActions />
+          <VideoIntroProvider>
+            <Navbar />
+            <main className="relative z-10">{children}</main>
+            <Footer />
+            <FloatingActions />
+          </VideoIntroProvider>
         </SmoothScroll>
       </body>
     </html>
