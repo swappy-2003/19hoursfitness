@@ -97,8 +97,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Interactive Editorial Map Card (Zero iframe, 100% responsive, no scroll trapping) */}
-          <div className="col-span-12 lg:col-span-4 space-y-4">
+          {/* Google Map Widget (Original Responsive Embed) */}
+          <div className="col-span-12 lg:col-span-4 space-y-4 w-full min-w-0">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs text-[#F5F5F5] uppercase tracking-widest font-semibold block">
                 LOCATION MAP
@@ -109,69 +109,34 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 font-mono text-[11px] text-[#00E5FF] hover:text-[#F5F5F5] transition-colors group"
               >
-                <span>OPEN IN MAPS</span>
+                <span>OPEN MAPS</span>
                 <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             </div>
 
-            <a
-              href={BRAND.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative block w-full h-[220px] overflow-hidden border border-white/[0.1] hover:border-[#00E5FF]/40 bg-[#101216] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-              aria-label="Open 19 Hours Fitness on Google Maps"
-            >
-              {/* Dark Architectural Map Graphic */}
-              <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity duration-500">
-                <svg
-                  className="w-full h-full object-cover"
-                  viewBox="0 0 400 220"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Grid Lines */}
-                  <line x1="0" y1="40" x2="400" y2="40" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                  <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                  <line x1="0" y1="140" x2="400" y2="140" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                  <line x1="0" y1="190" x2="400" y2="190" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+            <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden border border-white/[0.1] bg-[#101216] group">
+              <iframe
+                title="19 Hours Fitness Location Map"
+                src="https://maps.google.com/maps?q=19%20Hours%20Fitness%20Viva%20College%20Road%20Virar%20West&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{
+                  border: 0,
+                }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full block object-cover"
+              />
 
-                  <line x1="70" y1="0" x2="70" y2="220" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                  <line x1="160" y1="0" x2="160" y2="220" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                  <line x1="250" y1="0" x2="250" y2="220" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                  <line x1="340" y1="0" x2="340" y2="220" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-
-                  {/* Main Roads */}
-                  <path d="M-20 120 L180 110 L260 70 L420 50" stroke="rgba(255,255,255,0.2)" strokeWidth="4" />
-                  <path d="M200 -20 L200 240" stroke="#00E5FF" strokeWidth="2.5" strokeDasharray="6 4" opacity="0.65" />
-                  <path d="M120 -20 L160 240" stroke="rgba(255,255,255,0.14)" strokeWidth="2" />
-                  <path d="M280 -20 L270 240" stroke="rgba(255,255,255,0.14)" strokeWidth="2" />
-                </svg>
-              </div>
-
-              {/* Central Location Pin & Radar Pulse */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-                <div className="relative flex items-center justify-center">
-                  <span className="absolute w-12 h-12 rounded-full bg-[#00E5FF]/20 animate-ping pointer-events-none" />
-                  <span className="relative w-7 h-7 rounded-full bg-[#08090B] border-2 border-[#00E5FF] flex items-center justify-center shadow-[0_0_15px_#00E5FF]">
-                    <span className="w-2 h-2 rounded-full bg-[#00E5FF]" />
-                  </span>
-                </div>
-                <div className="mt-2 bg-[#08090B]/90 backdrop-blur-md px-2.5 py-1 border border-white/10 shadow-lg whitespace-nowrap">
-                  <span className="font-mono text-[10px] text-[#F5F5F5] font-semibold tracking-wider block">
-                    19 HOURS FITNESS
-                  </span>
-                </div>
-              </div>
-
-              {/* Bottom Details Bar */}
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[10px] font-mono tracking-wider text-[#969BA3]">
-                <span>VIVA COLLEGE RD, VIRAR WEST</span>
-                <span className="text-[#00E5FF] font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                  <span>GET DIRECTIONS</span>
-                  <ArrowUpRight className="w-3 h-3" />
+              {/* Location Pin Tag */}
+              <div className="absolute bottom-3 left-3 bg-[#08090B]/90 backdrop-blur-md px-3 py-1.5 border border-white/10 flex items-center gap-2 pointer-events-none z-10">
+                <span className="w-2 h-2 rounded-full bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]" />
+                <span className="font-mono text-[10px] text-[#F5F5F5] uppercase tracking-wider font-medium">
+                  19 HOURS · VIRAR WEST
                 </span>
               </div>
-            </a>
+            </div>
           </div>
         </div>
 
