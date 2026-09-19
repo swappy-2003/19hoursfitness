@@ -184,6 +184,7 @@ export const TRAINERS = [
     name: "Swapnil Gothal",
     role: "Strength & Performance Coach",
     discipline: "Powerlifting & Biomechanics",
+    image: "/images/experience/strength.jpg",
   },
   {
     id: "nilesh-patekar",
@@ -191,6 +192,7 @@ export const TRAINERS = [
     name: "Nilesh Patekar",
     role: "CrossFit & Conditioning Specialist",
     discipline: "High-Intensity Functional Training",
+    image: "/images/experience/crossfit.jpg",
   },
   {
     id: "swapnil-pendhare",
@@ -198,6 +200,7 @@ export const TRAINERS = [
     name: "Swapnil Pendhare",
     role: "Transformation & Hypertrophy Coach",
     discipline: "Body Recomposition & Nutrition",
+    image: "/images/training/muscle.jpg",
   },
   {
     id: "prasad-mestry",
@@ -205,6 +208,7 @@ export const TRAINERS = [
     name: "Prasad Mestry",
     role: "Elite Personal Trainer",
     discipline: "Strength Periodization & Mobility",
+    image: "/images/experience/pt.jpg",
   },
   {
     id: "ravikant-khadtare",
@@ -212,6 +216,7 @@ export const TRAINERS = [
     name: "Ravikant Khadtare",
     role: "Athletic Conditioning Specialist",
     discipline: "Cardio Engine & Agility",
+    image: "/images/training/conditioning.jpg",
   },
   {
     id: "harpinder-singh",
@@ -219,6 +224,15 @@ export const TRAINERS = [
     name: "Harpinder Singh",
     role: "Strength & Resistance Coach",
     discipline: "Barbell Mastery & Muscle Gain",
+    image: "/images/training/strength.jpg",
+  },
+  {
+    id: "gaurav-satam",
+    number: "07",
+    name: "Gaurav Satam",
+    role: "Functional & Strength Specialist",
+    discipline: "Athletic Performance & Core Stability",
+    image: "/images/training/fatloss.jpg",
   },
 ];
 
