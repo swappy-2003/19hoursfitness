@@ -122,7 +122,6 @@ export default function Footer() {
                 height="100%"
                 style={{
                   border: 0,
-                  filter: "invert(90%) hue-rotate(180deg) contrast(120%) grayscale(25%)",
                 }}
                 allowFullScreen={false}
                 loading="lazy"
