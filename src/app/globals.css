@@ -286,3 +286,33 @@ body {
   }
 }
 
+/* Slow Marquee Animation for all screen sizes */
+@keyframes marqueeSlow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-slow {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  width: max-content !important;
+  will-change: transform;
+  animation: marqueeSlow 65s linear infinite;
+}
+
+.animate-marquee-slow:hover,
+.animate-marquee-slow.is-paused {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-slow {
+    animation: none;
+  }
+}
+
