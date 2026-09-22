@@ -54,8 +54,8 @@ export default function GymEnvironment() {
 
         {/* Asymmetrical Editorial Gallery Layout */}
         <div className="grid grid-cols-12 gap-6 md:gap-8">
-          {/* Main Large Visual */}
-          <div className="col-span-12 lg:col-span-8 relative aspect-[16/10] overflow-hidden border border-white/[0.08] bg-[#101216] group">
+          {/* Main Large Visual - Functional & CrossFit Arena */}
+          <div className="col-span-12 lg:col-span-8 relative aspect-[16/10] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
             <div className="parallax-image relative w-full h-[115%] -top-[7%]">
               <Image
                 src={GALLERY_IMAGES[0].src}
@@ -64,17 +64,22 @@ export default function GymEnvironment() {
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/20 to-transparent" />
             </div>
-            <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-xs font-mono tracking-widest text-[#F5F5F5]">
-              <span>{GALLERY_IMAGES[0].caption}</span>
-              <span className="text-[#00E5FF]">VIRAR WEST</span>
+            <div className="absolute top-4 left-4 md:top-6 md:left-6">
+              <span className="px-2.5 py-1 text-[10px] md:text-xs font-mono tracking-widest uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                {GALLERY_IMAGES[0].tag}
+              </span>
+            </div>
+            <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-xs md:text-sm font-mono tracking-widest text-[#F5F5F5]">
+              <span className="font-semibold">{GALLERY_IMAGES[0].caption}</span>
+              <span className="text-[#00E5FF] hidden sm:inline">{GALLERY_IMAGES[0].location}</span>
             </div>
           </div>
 
-          {/* Right Stacked Visuals */}
+          {/* Right Stacked Visuals - Dumbbells & Olympic Platform */}
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 md:gap-8">
-            <div className="relative aspect-[4/3] overflow-hidden border border-white/[0.08] bg-[#101216] group">
+            <div className="relative aspect-[4/3] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
               <div className="parallax-image relative w-full h-[115%] -top-[7%]">
                 <Image
                   src={GALLERY_IMAGES[1].src}
@@ -83,13 +88,19 @@ export default function GymEnvironment() {
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/10 to-transparent" />
               </div>
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-[11px] font-mono tracking-widest text-[#F5F5F5]">
+              <div className="absolute top-3 left-3">
+                <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                  {GALLERY_IMAGES[1].tag}
+                </span>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-[11px] md:text-xs font-mono tracking-widest text-[#F5F5F5]">
                 <span>{GALLERY_IMAGES[1].caption}</span>
               </div>
             </div>
 
-            <div className="relative aspect-[4/3] overflow-hidden border border-white/[0.08] bg-[#101216] group">
+            <div className="relative aspect-[4/3] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
               <div className="parallax-image relative w-full h-[115%] -top-[7%]">
                 <Image
                   src={GALLERY_IMAGES[2].src}
@@ -98,43 +109,103 @@ export default function GymEnvironment() {
                   sizes="(max-width: 1024px) 100vw, 33vw"
                   className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/10 to-transparent" />
               </div>
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-[11px] font-mono tracking-widest text-[#F5F5F5]">
+              <div className="absolute top-3 left-3">
+                <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                  {GALLERY_IMAGES[2].tag}
+                </span>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-[11px] md:text-xs font-mono tracking-widest text-[#F5F5F5]">
                 <span>{GALLERY_IMAGES[2].caption}</span>
               </div>
             </div>
           </div>
 
-          {/* Bottom Two Balanced Editorial Cards */}
-          <div className="col-span-12 md:col-span-6 relative aspect-[16/9] overflow-hidden border border-white/[0.08] bg-[#101216] group">
+          {/* Middle Three Specialized Stations */}
+          <div className="col-span-12 md:col-span-4 relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
             <div className="parallax-image relative w-full h-[115%] -top-[7%]">
               <Image
                 src={GALLERY_IMAGES[3].src}
                 alt={GALLERY_IMAGES[3].alt}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/10 to-transparent" />
+            </div>
+            <div className="absolute top-3 left-3">
+              <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                {GALLERY_IMAGES[3].tag}
+              </span>
             </div>
             <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-xs font-mono tracking-widest text-[#F5F5F5]">
               <span>{GALLERY_IMAGES[3].caption}</span>
-              <span className="text-[#00E5FF]">ZONE 01</span>
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6 relative aspect-[16/9] overflow-hidden border border-white/[0.08] bg-[#101216] group">
+          <div className="col-span-12 md:col-span-4 relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
             <div className="parallax-image relative w-full h-[115%] -top-[7%]">
               <Image
                 src={GALLERY_IMAGES[4].src}
                 alt={GALLERY_IMAGES[4].alt}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/10 to-transparent" />
+            </div>
+            <div className="absolute top-3 left-3">
+              <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                {GALLERY_IMAGES[4].tag}
+              </span>
             </div>
             <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-xs font-mono tracking-widest text-[#F5F5F5]">
               <span>{GALLERY_IMAGES[4].caption}</span>
-              <span className="text-[#00E5FF]">ZONE 02</span>
+            </div>
+          </div>
+
+          <div className="col-span-12 md:col-span-4 relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
+            <div className="parallax-image relative w-full h-[115%] -top-[7%]">
+              <Image
+                src={GALLERY_IMAGES[5].src}
+                alt={GALLERY_IMAGES[5].alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/10 to-transparent" />
+            </div>
+            <div className="absolute top-3 left-3">
+              <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                {GALLERY_IMAGES[5].tag}
+              </span>
+            </div>
+            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-xs font-mono tracking-widest text-[#F5F5F5]">
+              <span>{GALLERY_IMAGES[5].caption}</span>
+            </div>
+          </div>
+
+          {/* Bottom Panoramic Visual - Member Lounge & Consultation */}
+          <div className="col-span-12 relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[24/9] overflow-hidden border border-white/[0.08] bg-[#101216] group transition-colors duration-500 hover:border-[#00E5FF]/40">
+            <div className="parallax-image relative w-full h-[115%] -top-[7%]">
+              <Image
+                src={GALLERY_IMAGES[6].src}
+                alt={GALLERY_IMAGES[6].alt}
+                fill
+                sizes="100vw"
+                className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#08090B]/90 via-[#08090B]/20 to-transparent" />
+            </div>
+            <div className="absolute top-4 left-4 md:top-6 md:left-6">
+              <span className="px-2.5 py-1 text-[10px] md:text-xs font-mono tracking-widest uppercase bg-[#08090B]/70 backdrop-blur-sm border border-white/10 text-[#00E5FF]">
+                {GALLERY_IMAGES[6].tag}
+              </span>
+            </div>
+            <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-xs md:text-sm font-mono tracking-widest text-[#F5F5F5]">
+              <span className="font-semibold">{GALLERY_IMAGES[6].caption}</span>
+              <span className="text-[#00E5FF]">{GALLERY_IMAGES[6].location}</span>
             </div>
           </div>
         </div>
