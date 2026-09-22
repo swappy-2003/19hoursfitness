@@ -30,6 +30,14 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "https://19hoursfitness.vercel.app");
+
 export const metadata: Metadata = {
   title: "19 Hours Fitness | Premium Gym in Virar West",
   description:
@@ -47,19 +55,20 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "19 Hours Fitness" }],
   creator: "19 Hours Fitness",
-  metadataBase: new URL("https://19hoursfitness.com"),
+  metadataBase: new URL(siteUrl),
   openGraph: {
     title: "19 Hours Fitness | Premium Gym in Virar West",
     description:
       "Where Transformation Becomes a Lifestyle. Experience high-performance strength, CrossFit, and recovery in Virar West.",
-    url: "https://19hoursfitness.com",
+    url: siteUrl,
     siteName: "19 Hours Fitness",
     images: [
       {
-        url: "/images/og-image.png",
-        width: 1672,
-        height: 941,
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 675,
         alt: "19 Hours Fitness - Stronger Everyday",
+        type: "image/jpeg",
       },
     ],
     locale: "en_IN",
@@ -70,7 +79,7 @@ export const metadata: Metadata = {
     title: "19 Hours Fitness | Premium Gym in Virar West",
     description:
       "Where Transformation Becomes a Lifestyle. Experience high-performance strength, CrossFit, and recovery in Virar West.",
-    images: ["/images/og-image.png"],
+    images: ["/images/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -92,9 +101,9 @@ const jsonLd = {
   "@type": "ExerciseGym",
   name: "19 Hours Fitness",
   alternateName: "19 Hours Fitness Club",
-  url: "https://19hoursfitness.com",
-  logo: "https://19hoursfitness.com/images/logo.png",
-  image: "https://19hoursfitness.com/images/og-image.png",
+  url: siteUrl,
+  logo: `${siteUrl}/images/logo.png`,
+  image: `${siteUrl}/images/og-image.jpg`,
   description:
     "19 Hours Fitness is a premium fitness club in Virar West offering strength training, CrossFit, personal training, cardio and transformation programs.",
   telephone: BRAND.phone,
