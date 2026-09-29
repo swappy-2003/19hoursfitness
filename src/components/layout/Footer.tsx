@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -144,13 +146,55 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright & NAP */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] font-mono tracking-widest text-[#969BA3]/60">
-          <div>
-            © {new Date().getFullYear()} 19 HOURS FITNESS. ALL RIGHTS RESERVED.
+        <div className="pt-8 flex flex-col items-center gap-5 text-[11px] font-mono tracking-widest text-[#969BA3]/60">
+          <div className="w-full flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              © {new Date().getFullYear()} 19 HOURS FITNESS. ALL RIGHTS RESERVED.
+            </div>
+            <div>
+              PLOT NO. 201–202, VARKHANA BHAVAN, VIVA COLLEGE RD, VIRAR WEST
+            </div>
           </div>
-          <div>
-            PLOT NO. 201–202, VARKHANA BHAVAN, VIVA COLLEGE RD, VIRAR WEST
-          </div>
+
+          {/* Made with love by 99Labs capsule */}
+          <a
+            href="https://99labs.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] hover:border-white/[0.15] hover:bg-white/[0.06] transition-all duration-300 text-[11px] font-mono tracking-wider text-[#969BA3]/80 hover:text-[#c4c8ce] cursor-pointer"
+          >
+            <span>MADE WITH</span>
+            <span
+              className="inline-block text-[13px] transition-all duration-300 group-hover:scale-125"
+              style={{
+                color: '#969BA3',
+                filter: 'none',
+                transition: 'color 0.3s, filter 0.3s, transform 0.3s',
+              }}
+              onMouseEnter={() => {}}
+              ref={(el) => {
+                if (!el) return;
+                const parent = el.closest('.group');
+                if (!parent) return;
+                parent.addEventListener('mouseenter', () => {
+                  el.style.color = '#ff2d55';
+                  el.style.filter = 'drop-shadow(0 0 6px #ff2d55) drop-shadow(0 0 14px #ff2d55aa) drop-shadow(0 0 28px #ff2d5555)';
+                  el.style.transform = 'scale(1.25)';
+                });
+                parent.addEventListener('mouseleave', () => {
+                  el.style.color = '#969BA3';
+                  el.style.filter = 'none';
+                  el.style.transform = 'scale(1)';
+                });
+              }}
+            >
+              ❤️
+            </span>
+            <span>BY</span>
+            <span className="text-[#F5F5F5] font-semibold group-hover:text-[#00E5FF] transition-colors duration-300">
+              99LABS
+            </span>
+          </a>
         </div>
       </div>
     </footer>
