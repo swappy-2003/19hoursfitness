@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import { TRAINERS, BRAND } from "@/lib/constants";
@@ -119,9 +120,10 @@ export default function Trainers() {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {TRAINERS.map((trainer, index) => (
-              <div
+              <Link
+                href={`/trainers/${trainer.id}`}
                 key={trainer.id}
-                className="group relative flex-none w-full md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] snap-start flex flex-col bg-[#101216] border border-white/[0.08] hover:border-[#00E5FF]/40 transition-all duration-300 overflow-hidden"
+                className="group relative flex-none w-full md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] snap-start flex flex-col bg-[#101216] border border-white/[0.08] hover:border-[#00E5FF]/40 transition-all duration-300 overflow-hidden cursor-pointer"
               >
                 {/* Subtle Ambient Hover Glow */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E5FF]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -139,9 +141,15 @@ export default function Trainers() {
                   {/* Soft bottom gradient to smoothly blend into the dark card footer */}
                   <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#101216] via-[#101216]/50 to-transparent pointer-events-none" />
 
-                  {/* Top Coach Number Badge */}
-                  <div className="absolute top-3.5 left-3.5 font-mono text-xs tracking-widest text-[#00E5FF] font-semibold bg-[#08090B]/85 backdrop-blur-md px-2.5 py-1 border border-white/10">
-                    {trainer.number}
+                  {/* Top Coach Number / Founder Badge */}
+                  <div
+                    className={`absolute top-3.5 left-3.5 font-mono text-xs tracking-widest font-semibold backdrop-blur-md px-2.5 py-1 border ${
+                      trainer.isOwner
+                        ? "bg-[#00E5FF] text-[#08090B] border-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                        : "bg-[#08090B]/85 text-[#00E5FF] border-white/10"
+                    }`}
+                  >
+                    {trainer.isOwner ? "FOUNDER & OWNER" : trainer.number}
                   </div>
 
                   {/* Location Tag */}
@@ -168,22 +176,17 @@ export default function Trainers() {
 
                   {/* Card Footer / Direct WhatsApp 1-on-1 */}
                   <div className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                    <a
-                      href={`https://wa.me/${BRAND.whatsappNumber}?text=Hi%2019%20Hours%20Fitness%2C%20I%20would%20like%20to%20train%20with%20${encodeURIComponent(
-                        trainer.name
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <span
                       className="inline-flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-[#969BA3] group-hover:text-[#F5F5F5] transition-colors"
                     >
-                      <span>REQUEST 1-ON-1</span>
+                      <span>VIEW PROFILE</span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[#00E5FF] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </a>
+                    </span>
 
                     <span className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#00E5FF] group-hover:shadow-[0_0_8px_#00E5FF] transition-colors" />
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

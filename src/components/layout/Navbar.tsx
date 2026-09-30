@@ -102,7 +102,7 @@ export default function Navbar() {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.name}
-                href={link.href}
+                href={link.href.startsWith("#") ? `/${link.href}` : link.href}
                 className="relative py-1 transition-colors duration-200 hover:text-[#F5F5F5] group"
               >
                 {link.name}
@@ -152,7 +152,7 @@ export default function Navbar() {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.name}
-                href={link.href}
+                href={link.href.startsWith("#") ? `/${link.href}` : link.href}
                 onClick={() => setMobileOpen(false)}
                 className="mobile-nav-link font-display text-4xl uppercase tracking-tight hover:text-[#00E5FF] transition-colors"
               >
