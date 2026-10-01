@@ -38,9 +38,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  // Primary 1200x630 card JPEG and secondary portrait JPEG (< 80KB each for WhatsApp)
-  const ogCardUrl = `${siteUrl}${trainer.ogImage || `/images/trainers/og/${trainer.id}-card.jpg`}`;
-  const ogPhotoUrl = `${siteUrl}${trainer.ogPhoto || `/images/trainers/og/${trainer.id}.jpg`}`;
+  // Direct trainer portrait image for OpenGraph & WhatsApp preview (< 80KB)
+  const ogImageUrl = `${siteUrl}${trainer.ogImage || trainer.ogPhoto || `/images/trainers/og/${trainer.id}.jpg` || trainer.image}`;
 
   const title = trainer.isOwner
     ? `${trainer.name} | Founder & Owner · 19 Hours Fitness`
@@ -65,19 +64,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "profile",
       images: [
         {
-          url: ogCardUrl,
-          secureUrl: ogCardUrl,
-          width: 1200,
-          height: 630,
-          alt: `${trainer.name} - ${trainer.isOwner ? "Founder & Owner" : trainer.role} at 19 Hours Fitness`,
-          type: "image/jpeg",
-        },
-        {
-          url: ogPhotoUrl,
-          secureUrl: ogPhotoUrl,
+          url: ogImageUrl,
+          secureUrl: ogImageUrl,
           width: 800,
           height: 1000,
-          alt: `${trainer.name} Portrait Photo`,
+          alt: `${trainer.name} - ${trainer.isOwner ? "Founder & Owner" : trainer.role} at 19 Hours Fitness`,
           type: "image/jpeg",
         },
       ],
@@ -86,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: `${trainer.name} · ${trainer.isOwner ? "Founder & Owner" : trainer.role} | 19 Hours Fitness`,
       description: trainer.quote ?? trainer.discipline,
-      images: [ogCardUrl],
+      images: [ogImageUrl],
     },
   };
 }
